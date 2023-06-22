@@ -3,10 +3,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "fila_enc.h"
+#include "fila_abb.h"
 
 struct celula{
-    int conteudo;
+    no_arv* conteudo;
     struct celula* prox;
 
 };
@@ -18,27 +18,22 @@ struct fila{
 
 fila_enc* criar_enc(){
     fila_enc* nova_lista = (fila_enc*) calloc(1, sizeof(fila_enc));
-    if(nova_lista == NULL){
-        free(nova_lista);
-        return NULL;
-    }
-    
+        
     return nova_lista;
-    
 }
 
 static celula* criar_cel(int valor){
     celula* nova_cel = (celula*) malloc(sizeof(celula));
     if(nova_cel != NULL)
     {
-        nova_cel->conteudo = valor;
+        nova_cel->conteudo = criar_abb(valor);
         nova_cel->prox = NULL;
     }
     return nova_cel;
     
 }
 
-int frente_enc(fila_enc* F){
+no_arv* frente_enc(fila_enc* F){
     if(vazia_enc(F) || F == NULL){
         printf("FILA VAZIA\n");
     }
@@ -64,19 +59,20 @@ bool vazia_enc(fila_enc* F){
 }
 
 
-bool inserir_enc(fila_enc* F, int e){
-    celula* cel = criar_cel(e);
+bool inserir_enc(fila_enc* F, no_arv* no){
+    celula *cel = (celula*) calloc(1, sizeof(celula));
 
     if (F == NULL || cel == NULL) {
         return false;
     }
 
-    cel->conteudo = e;
+    cel->conteudo = no;
     cel->prox = NULL;
 
-    if (vazia_enc(F)) {
+    if(vazia_enc(F)){
         F->prim = cel;
-    } else {
+    } 
+    else{
         celula* atual = F->prim;
         while (atual->prox != NULL) {
             atual = atual->prox;
@@ -89,17 +85,11 @@ bool inserir_enc(fila_enc* F, int e){
     return true;
 }
 
-bool remover_enc(fila_enc* F, int* valor){
+bool remover_enc(fila_enc* F, no_arv* no){
     if(vazia_enc(F))
         return false;
 
     celula *removida = F->prim;
-    *valor = removida->conteudo;
-    if(tamanho_enc(F) == 1){
-        F->prim = NULL;
-        F->qtde--;
-        return true;
-    }
     F->prim = F->prim->prox;
     free(removida);
     F->qtde--;
@@ -111,9 +101,10 @@ fila_enc* liberar_enc(fila_enc* F){
     if(vazia_enc(F))
         return F;
     
-    int r;
+    
+    no_arv* n = (no_arv*) malloc(sizeof(no_arv*));
     while(!vazia_enc(F))
-        remover_enc(F, &r);
+        remover_enc(F, n);
 
     free(F);
     return NULL;

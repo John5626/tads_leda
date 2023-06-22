@@ -1,9 +1,10 @@
-//TAD TIPO FILA ENCADEADA
+//TAD TIPO FILA ENCADEADA ABB
 //JOAO VICTOR ECOMP
-#ifndef FILAENC_H
-#define FILAENC_H
+#ifndef FILAABB_H
+#define FILAABB_H
 
 #include <stdbool.h>
+#include "abb_int.h"
 
 //Encapsulamento dos dados
 
@@ -24,7 +25,7 @@ fila_enc* criar_enc();
 Entrada: fila F
 Saída: nao tem
 */
-int frente_enc(fila_enc* F);
+no_arv* frente_enc(fila_enc* F);
 
 
 /*Tamanho da Fila (quantidade de elementos válidos na fila)
@@ -47,7 +48,7 @@ Inserção no fim
 Entrada: fila F, elemento e a ser inserido
 Saída: sucesso (verdadeiro) ou falha (falso) na operação
 */
-bool inserir_enc(fila_enc* F, int e);
+bool inserir_enc(fila_enc* F, no_arv* no);
 
 
 //OPERAÇOES DE REMOÇÃO
@@ -57,9 +58,9 @@ Remoção no início e retorna o valor removido
 Entrada: fila F e a variavel que armazenará o valor removido
 Saída: sucesso ou falha na operação
 */
-bool remover_enc(fila_enc* F, int* removido);
+bool remover_enc(fila_enc* F, no_arv* removido);
 
 fila_enc* liberar_enc(fila_enc* F);
 
 
-#endif //FILAENC_H
+#endif //FILAABB_H

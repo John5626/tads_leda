@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #include "abb_int.h"
+#include "fila_abb.h"
 
 struct no{
     int info;
@@ -37,7 +37,7 @@ void percorrer_abb(no_arv* no){
         return;
     
     percorrer_abb(no->sae);
-    printf("%d", no->info);
+    printf("%d ", no->info);
     percorrer_abb(no->sad);
 }
 
@@ -46,7 +46,7 @@ no_arv* minimo_abb(no_arv* no){
         return NULL;
 
     else if(no->sae != NULL)
-        return minimo(no->sae);
+        return minimo_abb(no->sae);
 
     return no;
 }
@@ -65,7 +65,68 @@ bool buscar_abb(no_arv* no, int valor){
 }
 
 void busca_largura_abb(no_arv* no){
+    fila_enc* f = criar_enc();
+    inserir_enc(f, no);
 
+    no_arv *rem;
+    while(!vazia_enc(f)){
+        no_arv* atual = frente_enc(f);
+        printf("%d ", atual->info);
+        remover_enc(f, rem);
+
+        if(atual->sae)
+            inserir_enc(f, atual->sae);
+        if(atual->sad)
+            inserir_enc(f, atual->sad);
+    }
+}
+
+no_arv* remover_abb(no_arv* no, int valor){
+    if(no == NULL)
+        return NULL;
+
+    if(valor < no->info)
+        no->sae = remover_abb(no->sae, valor);
+
+    else if(valor > no->info)
+        no->sad = remover_abb(no->sad, valor);
+    
+    else{
+        no_arv* temp = NULL;
+
+        if(no->sae == NULL && no->sad == NULL){
+            free(no);
+            return NULL;
+        }
+        else if(no->sae == NULL){
+            temp = no->sad;
+            free(no);
+            return temp;
+        }
+        else if(no->sad == NULL){
+            temp = no->sae;
+            free(no);
+            return temp;
+        }
+        else{
+            no_arv* temp = minimo_abb(no->sad);
+            no->info = temp->info;
+            no->sad = remover_abb(no->sad, temp->info); 
+        }
+    }
+
+    return no;
+}
+
+void liberar_abb(no_arv* no){
+    if(no == NULL){
+        return;
+    }
+
+    no_arv* temp = no;
+    liberar_abb(no->sae);
+    liberar_abb(no->sad);
+    free(temp);
 }
 
 

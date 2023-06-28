@@ -1,48 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lista_dp_enc.h"
+#include "max_heap.h"
 
 int main() {
-    lista_dp* lista = criar_dp(); // Cria uma nova lista
+    printf("------ TESTE BASICO ------\n");
 
-    // Inserção de elementos na lista
-    inserir_fim_dp(lista, 10);
-    inserir_fim_dp(lista, 20);
-    inserir_inicio_dp(lista, 5);
-    inserir_meio_dp(lista, 15, 2);
+    heap_max* h1 = criar_heap(20);
+    if(h1 == NULL)
+        exit(EXIT_FAILURE);
 
-    // Exibe a lista
-    exibir_dp(lista);
+    printf("> Inserir elementos\n");
+    int i;
+    for(i = 1; i <= 20; i++) {
+        if(inserir_heap(h1, i))
+            printf("\nInsercao de %d com sucesso", i);
+        else
+            printf("Valor %d nao inserido", i);
+        
+        exibir_heap_arvore(h1);
+        printf("\n");
+    }
+    
+    printf("> Remover todos os elementos\n");
+    while(!vazia_heap(h1)) {
+        printf("%d ", remover_heap(h1));
+    }
+    printf("\n");
+    liberar_heap(&h1);
 
-    // Verifica o tamanho da lista
-    printf("\nTamanho da lista: %d\n", tamanho_dp(lista));
+    printf("\n\n>>>> INSERIR os elementos de um vetor \n");
+    int vetor[] = {50, 29, 33, 21, 11, 78, 66, 99},
+        tam = sizeof(vetor)/sizeof(int);
+    for(int i = 0; i < tam; i++)
+        printf("%d ", vetor[i]);
+    printf("\n");
 
-    // Verifica se a lista está vazia
-    if (vazia_dp(lista)) {
-        printf("A lista está vazia.\n");
-    } else {
-        printf("A lista não está vazia.\n");
+    heap_max* h2 = criar_heap(20);
+    if(h2 == NULL)
+        exit(EXIT_FAILURE);
+    
+    inserir_vet_heap(h2, vetor, tam);
+    exibir_heap(h2);
+    printf("\n");
+
+    printf("\n> REMOVER\n");
+    int r;
+    while(!vazia_heap(h2)) {
+        r = remover_heap(h2);
+        if(r != -1)
+            printf("\nRemocao efetuada com sucesso. Valor removido: %d.", r);
+        else
+            printf("\nRemocao nao efetuada.");
+        exibir_heap(h2);
+        printf("\n");
     }
 
-    // Busca um elemento na lista
-    if (buscar_seq_dp(lista, 20)) {
-        printf("O elemento 20 está na lista.\n");
-    } else {
-        printf("O elemento 20 não está na lista.\n");
-    }
-
-    // Remove elementos da lista
-    int valor_removido;
-    remover_inicio_dp(lista, &valor_removido);
-    printf("Valor removido do início: %d\n", valor_removido);
-    remover_fim_dp(lista, &valor_removido);
-    printf("Valor removido do fim: %d\n", valor_removido);
-
-    // Exibe a lista após as remoções
-    exibir_dp(lista);
-
-    // Libera a memória alocada pela lista
-    liberar_dp(lista);
+    liberar_heap(&h2);
 
     return 0;
 }
